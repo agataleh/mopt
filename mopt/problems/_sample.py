@@ -11,7 +11,6 @@ class Sample(object):
     'grd': 'generate_sample_grid',
     'rnd': 'generate_sample_random',
     'lhs': 'generate_sample_lhs',
-    'olhs': 'generate_sample_olhs',
   }
 
   def __init__(self, problem, tag='', doe=None, size=None, verbose=False, load_only=False, *args, **kwargs):

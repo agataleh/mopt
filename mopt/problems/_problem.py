@@ -399,6 +399,7 @@ class GenericProblem(with_metaclass(_GenericProblemInitializer, object)):
 
   def generate_sample_ff(self, size=None, n_cells=None, random=True, seed=None):
     from . import _doe
+    assert size is not None or n_cells is not None
     if n_cells is None and size is not None:
       n_cells = _doe.n_cells(dim=self.size_x, size=size)
     if seed is not None:
@@ -427,11 +428,11 @@ class GenericProblem(with_metaclass(_GenericProblemInitializer, object)):
     x = lb + _doe.random(dim=self.size_x, size=size) * (ub - lb)
     return x, self.evaluate(x)
 
-  def generate_sample_lhs(self, size, seed=None):
-    pass
-
-  def generate_sample_olhs(self, size, seed=None):
-    pass
+  def generate_sample_lhs(self, size, seed=None, centered=False):
+    from scipy.stats import qmc
+    sampler = qmc.LatinHypercube(d=self.size_x, seed=seed, centered=centered)
+    x = qmc.scale(sampler.random(size), *self.variables_bounds)
+    return x, self.evaluate(x)
 
   def plot(self, x1_nodes=50, x2_nodes=50, wireframe=False, file_name=None, x1_bounds=None, x2_bounds=None):
     import matplotlib.pyplot as plt
